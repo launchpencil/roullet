@@ -20,7 +20,7 @@
         }
         #dice {
             width: 50%;
-            padding: 30px; /* パディングを追加 */
+            padding: 30px;
             background-color: #3498db;
             border: 3px solid #2980b9;
             border-radius: 10px;
@@ -51,40 +51,38 @@
     </div>
 
     <script>
-        let rolling = false; // ダイスが転がっているかどうかを管理するフラグ
-        let timer; // ダイスのランダムな数字を表示するタイマー
-        let history = []; // 出目の履歴を保存する配列
+        let rolling = false;
+        let timer;
+        let history = [];
+        let lastResult; // 前回の結果を保持
 
-        // ダイスを振る関数
         function rollDice() {
             const min = 1;
             const max = 41;
-            const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+            let randomNumber;
+            do {
+                randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+            } while (randomNumber === lastResult); // 前回の結果と同じ場合は再生成
+
+            lastResult = randomNumber; // 結果を保持
             return randomNumber;
         }
 
-        // ダイスをクリックまたはタップしたときのイベントハンドラ
         const dice = document.getElementById("dice");
         const historyDisplay = document.getElementById("history");
 
         dice.addEventListener("click", function() {
-            if (!rolling) { // ダイスが転がっていない場合
-                rolling = true; // ダイスが転がっている状態にする
-
-                // ランダムな数字を表示
+            if (!rolling) {
+                rolling = true;
                 timer = setInterval(function() {
                     const result = rollDice();
                     dice.textContent = result;
                 }, 100);
-            } else { // ダイスが転がっている場合
-                clearInterval(timer); // アニメーションを停止
-                rolling = false; // ダイスが転がっていない状態に戻す
-
-                // 出目を記録
+            } else {
+                clearInterval(timer);
+                rolling = false;
                 const result = parseInt(dice.textContent);
                 history.push(result);
-
-                // 履歴を表示
                 historyDisplay.textContent = "History: " + history.join(", ");
             }
         });
