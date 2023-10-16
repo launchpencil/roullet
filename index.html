@@ -54,17 +54,17 @@
         let rolling = false;
         let timer;
         let history = [];
-        let lastResult; // 前回の結果を保持
 
         function rollDice() {
             const min = 1;
             const max = 41;
             let randomNumber;
+
+            // 既存の履歴に含まれていないランダムな数字を生成
             do {
                 randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
-            } while (randomNumber === lastResult); // 前回の結果と同じ場合は再生成
+            } while (history.includes(randomNumber));
 
-            lastResult = randomNumber; // 結果を保持
             return randomNumber;
         }
 
